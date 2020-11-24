@@ -39,28 +39,6 @@ int main(void)
     // Struct de las signals
     struct sigaction signal_usr1, signal_usr2;
 
-    // Configuracion SIGUSR1
-    signal_usr1.sa_handler = sigusr1_handler;
-    signal_usr1.sa_flags = 0; //SA_RESTART;
-    sigemptyset(&signal_usr1.sa_mask);
-
-    if (sigaction(SIGUSR1, &signal_usr1, NULL) == -1)
-    {
-        perror("Error en sigaction!!");
-        exit(1);
-    }
-
-        // Configuracion SIGUSR2
-    signal_usr2.sa_handler = sigusr2_handler;
-    signal_usr2.sa_flags = 0; //SA_RESTART;
-    sigemptyset(&signal_usr2.sa_mask);
-
-    if (sigaction(SIGUSR2, &signal_usr2, NULL) == -1)
-    {
-        perror("Error en sigaction!!");
-        exit(1);
-    }
-
     /* Create named fifo. -1 means already exists so no action if already exists */
     if ((returnCode = mknod(FIFO_NAME, S_IFIFO | 0666, 0)) < -1)
     {
@@ -73,6 +51,28 @@ int main(void)
     if ((fd = open(FIFO_NAME, O_WRONLY)) < 0)
     {
         printf("Error opening named fifo file: %d\n", fd);
+        exit(1);
+    }
+
+    // Configuracion SIGUSR1
+    signal_usr1.sa_handler = sigusr1_handler;
+    signal_usr1.sa_flags = 0; //SA_RESTART;
+    sigemptyset(&signal_usr1.sa_mask);
+
+    if (sigaction(SIGUSR1, &signal_usr1, NULL) == -1)
+    {
+        perror("Error en sigaction!!");
+        exit(1);
+    }
+
+    // Configuracion SIGUSR2
+    signal_usr2.sa_handler = sigusr2_handler;
+    signal_usr2.sa_flags = 0; //SA_RESTART;
+    sigemptyset(&signal_usr2.sa_mask);
+
+    if (sigaction(SIGUSR2, &signal_usr2, NULL) == -1)
+    {
+        perror("Error en sigaction!!");
         exit(1);
     }
 
